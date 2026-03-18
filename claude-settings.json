@@ -1,0 +1,74 @@
+{
+  "permissions": {
+    "allow": [
+      "// --- File reads ---",
+      "Glob",
+      "Grep",
+      "Read",
+
+      "// --- Network ---",
+      "WebFetch",
+
+      "// --- Shell utils ---",
+      "Bash(awk *)",
+      "Bash(cat *)",
+      "Bash(curl *)",
+      "Bash(echo *)",
+      "Bash(find *)",
+      "Bash(grep *)",
+      "Bash(head *)",
+      "Bash(jq *)",
+      "Bash(ls *)",
+      "Bash(ps *)",
+      "Bash(sed *)",
+      "Bash(tail *)",
+      "Bash(wc *)",
+      "Bash(which *)",
+
+      "// --- npm ---",
+      "Bash(npm audit*)",
+      "Bash(npm ci*)",
+      "Bash(npm i*)",
+      "Bash(npm install*)",
+      "Bash(npm ls*)",
+      "Bash(npm run *)",
+      "Bash(npm start*)",
+      "Bash(npm test*)",
+
+      "// --- yarn ---",
+      "Bash(yarn)",
+      "Bash(yarn build*)",
+      "Bash(yarn i*)",
+      "Bash(yarn install*)",
+      "Bash(yarn lint*)",
+      "Bash(yarn prettier*)",
+      "Bash(yarn run *)",
+      "Bash(yarn teleport*)",
+      "Bash(yarn test*)",
+
+      "// --- Kubernetes (read-only) ---",
+      "Bash(kubectl auth *)",
+      "Bash(kubectl describe *)",
+      "Bash(kubectl get *)",
+      "Bash(kubectl logs *)",
+      "Bash(kubectl port-forward *)",
+      "Bash(kubectl rollout status *)",
+      "Bash(kns *)",
+      "Bash(kubectx *)",
+      "Bash(kubens *)"
+    ],
+    "deny": [
+      "// --- Destructive git ---",
+      "Bash(git clean -f*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git reset --hard*)",
+
+      "// --- Destructive k8s ---",
+      "Bash(kubectl delete *)",
+
+      "// --- Destructive shell ---",
+      "Bash(rm -rf *)"
+    ]
+  }
+}
