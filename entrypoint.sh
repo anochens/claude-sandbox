@@ -12,7 +12,8 @@ CLAUDE_VERSION=$(node -e "console.log(require('/usr/local/lib/node_modules/@anth
 mkdir -p /root/.claude
 jq -n \
   --arg v "$CLAUDE_VERSION" \
-  '{hasCompletedOnboarding: true, lastOnboardingVersion: $v, theme: "dark", projects: {"/workspace": {hasTrustDialogAccepted: true}}}' \
+  --arg p "${HOST_PWD:-$PWD}" \
+  '{hasCompletedOnboarding: true, lastOnboardingVersion: $v, theme: "dark", projects: {($p): {hasTrustDialogAccepted: true}}}' \
   > /root/.claude/.config.json
 
 # Write sandbox settings into the container-local claude config volume

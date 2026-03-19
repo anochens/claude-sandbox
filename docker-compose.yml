@@ -1,11 +1,11 @@
 services:
   claude:
     image: claude-sandbox
-    working_dir: /workspace
+    working_dir: ${PWD}
     stdin_open: true
     tty: true
     volumes:
-      - ${PWD}:/workspace
+      - ${PWD}:${PWD}
       # Claude config lives in a named volume — never touches host ~/.claude
       - claude-config:/root/.claude
       # Sessions/history shared with host so conversations can be resumed

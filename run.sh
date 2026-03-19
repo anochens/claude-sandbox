@@ -40,12 +40,13 @@ SYMLINK_VOLUMES=()
 while IFS= read -r -d '' link; do
   target=$(readlink -f "$link")
   if [ -e "$target" ] && [ "$target" != "$PWD" ]; then
-    SYMLINK_VOLUMES+=(-v "$target:/workspace/$(basename "$link")")
+    SYMLINK_VOLUMES+=(-v "$target:$PWD/$(basename "$link")")
   fi
 done < <(find "$PWD" -maxdepth 1 -type l -print0)
 
 docker compose -f "$SCRIPT_DIR/docker-compose.yml" run --rm \
   -e "ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY" \
+  -e "HOST_PWD=$PWD" \
   ${GH_TOKEN:+-e "GH_TOKEN=$GH_TOKEN"} \
   "${SYMLINK_VOLUMES[@]}" \
   claude "$@"

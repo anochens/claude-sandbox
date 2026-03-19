@@ -32,13 +32,13 @@ Claude Sandbox containerizes Claude Code so it can safely interact with your loc
 1. `run.sh` retrieves your API key (from `$ANTHROPIC_API_KEY` or the macOS keychain) and launches the container via Docker Compose.
 2. `entrypoint.sh` stashes the API key into `/run/claude-api-key` and removes it from the environment, preventing Claude Code from showing "custom API key detected" prompts.
 3. `claude-api-key.sh` is registered as the `apiKeyHelper` in Claude's settings so it can retrieve the key on demand.
-4. The current working directory on the host is mounted into the container at `/workspace`, giving Claude access to your project files.
+4. The current working directory on the host is mounted into the container at the same absolute path, so Claude's session/project keys match between host and container (enabling `--resume`).
 
 ## Claude Config Isolation
 
 The container's `~/.claude` lives in a named Docker volume (`claude-config`) and is **never bind-mounted from the host**. This means the sandbox cannot corrupt your host Claude settings (e.g. injecting `apiKeyHelper`).
 
-The one exception is `~/.claude/sessions`, which is bind-mounted from the host so conversation history is shared and sessions can be resumed (`--resume`) from either the sandbox or your host Claude installation. `run.sh` creates this directory automatically if it doesn't exist.
+Both `~/.claude/sessions` and `~/.claude/projects` are bind-mounted from the host, and the workspace is mounted at the same absolute path as on the host. Together these ensure `--resume <session-id>` works interchangeably between the sandbox and your host Claude installation. `run.sh` creates these directories automatically if they don't exist.
 
 ## Permissions
 
