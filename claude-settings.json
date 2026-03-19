@@ -105,8 +105,7 @@
 
       "// --- Destructive git ---",
       "Bash(git clean -f*)",
-      "Bash(git push --force*)",
-      "Bash(git push -f*)",
+      "Bash(git push*)",
       "Bash(git reset --hard*)",
 
       "// --- Destructive k8s ---",
