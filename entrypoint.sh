@@ -6,4 +6,4 @@ if [ -n "$ANTHROPIC_API_KEY" ]; then
   chmod 600 /run/claude-api-key
 fi
 
-exec env -u ANTHROPIC_API_KEY "$@"
+exec env -u ANTHROPIC_API_KEY claude "$@"

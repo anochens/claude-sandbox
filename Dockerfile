@@ -90,7 +90,7 @@ COPY claude-settings.json /root/.claude/settings.json
 # Write onboarding/theme flags — gD() checks for .config.json first, then settings.json
 RUN CLAUDE_VERSION=$(node -e "console.log(require('/usr/local/lib/node_modules/@anthropic-ai/claude-code/package.json').version)") \
     && jq -n --arg v "$CLAUDE_VERSION" \
-      '{hasCompletedOnboarding: true, lastOnboardingVersion: $v, theme: "dark"}' \
+      '{hasCompletedOnboarding: true, lastOnboardingVersion: $v, theme: "dark", projects: {"/workspace": {hasTrustDialogAccepted: true}}}' \
     | tee /root/.claude/.config.json > /root/.claude/settings.local.json
 
 # Create symlink so absolute SSH paths in .gitconfig resolve correctly

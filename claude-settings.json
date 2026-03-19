@@ -2,6 +2,11 @@
   "theme": "dark",
   "hasCompletedOnboarding": true,
   "apiKeyHelper": "/usr/local/bin/claude-api-key",
+  "projects": {
+    "/workspace": {
+      "hasTrustDialogAccepted": true
+    }
+  },
   "permissions": {
     "defaultMode": "default",
     "allow": [
