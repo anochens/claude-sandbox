@@ -1,2 +1,2 @@
 #!/bin/sh
-cat /run/claude-api-key 2>/dev/null
+cat /tmp/claude-api-key 2>/dev/null

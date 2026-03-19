@@ -7,27 +7,27 @@ services:
     volumes:
       - ${PWD}:${PWD}
       # Claude config lives in a named volume — never touches host ~/.claude
-      - claude-config:/root/.claude
+      - claude-config:/home/claude/.claude
       # Sessions/history shared with host so conversations can be resumed
-      - ${HOME}/.claude/sessions:/root/.claude/sessions
-      - ${HOME}/.claude/projects:/root/.claude/projects
-      - ${HOME}/.claude/history.jsonl:/root/.claude/history.jsonl
+      - ${HOME}/.claude/sessions:/home/claude/.claude/sessions
+      - ${HOME}/.claude/projects:/home/claude/.claude/projects
+      - ${HOME}/.claude/history.jsonl:/home/claude/.claude/history.jsonl
       # Auth & Identity
-      - ${HOME}/.npmrc:/root/.npmrc:ro
-      - ${HOME}/.gitconfig:/root/.gitconfig:ro
-      - ${HOME}/.ssh:/root/.ssh:ro
+      - ${HOME}/.npmrc:/home/claude/.npmrc:ro
+      - ${HOME}/.gitconfig:/home/claude/.gitconfig:ro
+      - ${HOME}/.ssh:/home/claude/.ssh:ro
       # Kubernetes
-      - ${HOME}/.kube:/root/.kube:ro
-      - ${HOME}/.pmctl:/root/.pmctl:ro
-      - ${HOME}/.config/argocd:/root/.config/argocd:ro
+      - ${HOME}/.kube:/home/claude/.kube:ro
+      - ${HOME}/.pmctl:/home/claude/.pmctl:ro
+      - ${HOME}/.config/argocd:/home/claude/.config/argocd:ro
       # Databases
-      - ${HOME}/.docdb:/root/.docdb:ro
-      - ${HOME}/.aws:/root/.aws:ro
+      - ${HOME}/.docdb:/home/claude/.docdb:ro
+      - ${HOME}/.aws:/home/claude/.aws:ro
       # Editor
-      - ${HOME}/.vimrc:/root/.vimrc:ro
-      - ${HOME}/.vim:/root/.vim:ro
+      - ${HOME}/.vimrc:/home/claude/.vimrc:ro
+      - ${HOME}/.vim:/home/claude/.vim:ro
       # Files
-      - ${HOME}/Downloads:/root/Downloads:ro
+      - ${HOME}/Downloads:/home/claude/Downloads:ro
 
 volumes:
   claude-config:

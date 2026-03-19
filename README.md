@@ -15,13 +15,25 @@ Claude Sandbox containerizes Claude Code so it can safely interact with your loc
 - Docker and Docker Compose
 - An Anthropic API key (via `ANTHROPIC_API_KEY` environment variable or macOS keychain)
 
+## Build
+
+```bash
+docker build -t claude-sandbox .
+```
+
+To rebuild from scratch (e.g. after changing the Dockerfile):
+
+```bash
+docker rmi claude-sandbox && docker build -t claude-sandbox .
+```
+
 ## Usage
 
 ```bash
 # Interactive Claude Code session in the current directory
 ./run.sh
 
-# Pass arguments directly to Claude
+# Skip permission prompts (requires non-root container user)
 ./run.sh --dangerously-skip-permissions
 ```
 
@@ -30,7 +42,7 @@ Claude Sandbox containerizes Claude Code so it can safely interact with your loc
 ## How It Works
 
 1. `run.sh` retrieves your API key (from `$ANTHROPIC_API_KEY` or the macOS keychain) and launches the container via Docker Compose.
-2. `entrypoint.sh` stashes the API key into `/run/claude-api-key` and removes it from the environment, preventing Claude Code from showing "custom API key detected" prompts.
+2. `entrypoint.sh` stashes the API key into `/tmp/claude-api-key` and removes it from the environment, preventing Claude Code from showing "custom API key detected" prompts.
 3. `claude-api-key.sh` is registered as the `apiKeyHelper` in Claude's settings so it can retrieve the key on demand.
 4. The current working directory on the host is mounted into the container at the same absolute path, so Claude's session/project keys match between host and container (enabling `--resume`).
 

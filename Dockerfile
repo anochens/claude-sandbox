@@ -25,6 +25,7 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     unzip \
     locales \
+    gosu \
     && rm -rf /var/lib/apt/lists/* \
     && sed -i '/en_US.UTF-8/s/^# //' /etc/locale.gen \
     && locale-gen
@@ -83,13 +84,19 @@ RUN curl -fsSL ${FNM_INSTALL_URL} | bash -s -- --install-dir /usr/local/bin --sk
 # Install Claude Code globally
 RUN npm install -g @anthropic-ai/claude-code
 
+# Create non-root user so --dangerously-skip-permissions works
+RUN useradd -m -u 1001 -s /bin/bash claude \
+    && mkdir -p /home/claude/.claude \
+    && chown -R claude:claude /home/claude
+
 # Store settings template outside ~/.claude so it survives the host mount.
 # The entrypoint copies it into place at runtime.
-RUN mkdir -p /root/.claude-defaults
-COPY claude-settings.json /root/.claude-defaults/settings.json
+RUN mkdir -p /home/claude/.claude-defaults
+COPY claude-settings.json /home/claude/.claude-defaults/settings.json
+RUN chown -R claude:claude /home/claude/.claude-defaults
 
 # Create symlink so absolute SSH paths in .gitconfig resolve correctly
-RUN mkdir -p /Users/aron.nochensonpostman.com && ln -s /root/.ssh /Users/aron.nochensonpostman.com/.ssh
+RUN mkdir -p /Users/aron.nochensonpostman.com && ln -s /home/claude/.ssh /Users/aron.nochensonpostman.com/.ssh
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
