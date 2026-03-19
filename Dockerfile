@@ -83,15 +83,10 @@ RUN curl -fsSL ${FNM_INSTALL_URL} | bash -s -- --install-dir /usr/local/bin --sk
 # Install Claude Code globally
 RUN npm install -g @anthropic-ai/claude-code
 
-# Bake in Claude Code permission settings
-RUN mkdir -p /root/.claude
-COPY claude-settings.json /root/.claude/settings.json
-
-# Write onboarding/theme flags — gD() checks for .config.json first, then settings.json
-RUN CLAUDE_VERSION=$(node -e "console.log(require('/usr/local/lib/node_modules/@anthropic-ai/claude-code/package.json').version)") \
-    && jq -n --arg v "$CLAUDE_VERSION" \
-      '{hasCompletedOnboarding: true, lastOnboardingVersion: $v, theme: "dark", projects: {"/workspace": {hasTrustDialogAccepted: true}}}' \
-    | tee /root/.claude/.config.json > /root/.claude/settings.local.json
+# Store settings template outside ~/.claude so it survives the host mount.
+# The entrypoint copies it into place at runtime.
+RUN mkdir -p /root/.claude-defaults
+COPY claude-settings.json /root/.claude-defaults/settings.json
 
 # Create symlink so absolute SSH paths in .gitconfig resolve correctly
 RUN mkdir -p /Users/aron.nochensonpostman.com && ln -s /root/.ssh /Users/aron.nochensonpostman.com/.ssh

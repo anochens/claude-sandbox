@@ -34,6 +34,12 @@ Claude Sandbox containerizes Claude Code so it can safely interact with your loc
 3. `claude-api-key.sh` is registered as the `apiKeyHelper` in Claude's settings so it can retrieve the key on demand.
 4. The current working directory on the host is mounted into the container at `/workspace`, giving Claude access to your project files.
 
+## Claude Config Isolation
+
+The container's `~/.claude` lives in a named Docker volume (`claude-config`) and is **never bind-mounted from the host**. This means the sandbox cannot corrupt your host Claude settings (e.g. injecting `apiKeyHelper`).
+
+The one exception is `~/.claude/sessions`, which is bind-mounted from the host so conversation history is shared and sessions can be resumed (`--resume`) from either the sandbox or your host Claude installation. `run.sh` creates this directory automatically if it doesn't exist.
+
 ## Permissions
 
 Claude's permissions are configured in `claude-settings.json` using an allowlist/denylist model.

@@ -6,9 +6,10 @@ services:
     tty: true
     volumes:
       - ${PWD}:/workspace
-      # Claude sessions (for --resume)
+      # Claude config lives in a named volume — never touches host ~/.claude
+      - claude-config:/root/.claude
+      # Sessions are shared with host so conversations persist across contexts
       - ${HOME}/.claude/sessions:/root/.claude/sessions
-      - ${HOME}/.claude/projects/-workspace:/root/.claude/projects/-workspace
       # Auth & Identity
       - ${HOME}/.bashrc:/root/.bashrc:ro
       - ${HOME}/.npmrc:/root/.npmrc:ro
@@ -17,7 +18,6 @@ services:
       # Kubernetes
       - ${HOME}/.kube:/root/.kube:ro
       - ${HOME}/.pmctl:/root/.pmctl:ro
-      - ${HOME}/.config/gh:/root/.config/gh:ro
       - ${HOME}/.config/argocd:/root/.config/argocd:ro
       # Databases
       - ${HOME}/.docdb:/root/.docdb:ro
@@ -27,3 +27,6 @@ services:
       - ${HOME}/.vim:/root/.vim:ro
       # Files
       - ${HOME}/Downloads:/root/Downloads:ro
+
+volumes:
+  claude-config:
