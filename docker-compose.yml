@@ -1,0 +1,26 @@
+services:
+  claude:
+    image: claude-sandbox
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+    volumes:
+      - ${PWD}:/workspace
+      # Auth & Identity
+      - ${HOME}/.bashrc:/root/.bashrc:ro
+      - ${HOME}/.npmrc:/root/.npmrc:ro
+      - ${HOME}/.gitconfig:/root/.gitconfig:ro
+      - ${HOME}/.ssh:/root/.ssh:ro
+      # Kubernetes
+      - ${HOME}/.kube:/root/.kube:ro
+      - ${HOME}/.pmctl:/root/.pmctl:ro
+      - ${HOME}/.config/argocd:/root/.config/argocd:ro
+      # Databases
+      - ${HOME}/.docdb:/root/.docdb:ro
+      - ${HOME}/.aws:/root/.aws:ro
+      # Editor
+      - ${HOME}/.vimrc:/root/.vimrc:ro
+      - ${HOME}/.vim:/root/.vim:ro
+      # Files
+      - ${HOME}/Downloads:/root/Downloads:ro
+    command: claude

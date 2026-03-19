@@ -1,4 +1,4 @@
-FROM node:22-bookworm-slim
+FROM node:20-bookworm-slim
 
 # --- URLs / Download Sources ---
 ARG ARGOCD_DOWNLOAD_URL=https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
@@ -24,7 +24,14 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     gnupg \
     unzip \
-    && rm -rf /var/lib/apt/lists/*
+    locales \
+    && rm -rf /var/lib/apt/lists/* \
+    && sed -i '/en_US.UTF-8/s/^# //' /etc/locale.gen \
+    && locale-gen
+
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+ENV LC_CTYPE=en_US.UTF-8
 
 # Install GitHub CLI
 RUN curl -fsSL ${GH_CLI_GPG_URL} \
@@ -83,10 +90,17 @@ COPY claude-settings.json /root/.claude/settings.json
 # Write settings.local.json with onboarding flags stamped with current version
 RUN CLAUDE_VERSION=$(node -e "console.log(require('/usr/local/lib/node_modules/@anthropic-ai/claude-code/package.json').version)") \
     && jq -n --arg v "$CLAUDE_VERSION" \
-      '{hasCompletedOnboarding: true, lastOnboardingVersion: $v, loginMethod: "console"}' \
+      '{hasCompletedOnboarding: true, lastOnboardingVersion: $v}' \
     > /root/.claude/settings.local.json
 
 # Create symlink so absolute SSH paths in .gitconfig resolve correctly
 RUN mkdir -p /Users/aron.nochensonpostman.com && ln -s /root/.ssh /Users/aron.nochensonpostman.com/.ssh
 
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+COPY claude-api-key.sh /usr/local/bin/claude-api-key
+RUN chmod +x /usr/local/bin/claude-api-key
+
 WORKDIR /workspace
+ENTRYPOINT ["/entrypoint.sh"]

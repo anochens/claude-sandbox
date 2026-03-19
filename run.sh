@@ -4,16 +4,15 @@
 #   e.g. claude-sandbox
 #        claude-sandbox --dangerously-skip-permissions
 
-IMAGE="claude-sandbox"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
-# Pull API key from macOS keychain
+# Pull API key from environment or macOS keychain
 if [ -z "$ANTHROPIC_API_KEY" ]; then
   ANTHROPIC_API_KEY=$(security find-generic-password -s "Claude Code" -w 2>/dev/null)
 fi
 
 if [ -z "$ANTHROPIC_API_KEY" ]; then
-  echo "Error: could not find Anthropic API key in keychain. Run 'claude' once to authenticate." >&2
+  echo "Error: could not find Anthropic API key. Set ANTHROPIC_API_KEY or store it in keychain." >&2
   exit 1
 fi
 
@@ -24,42 +23,9 @@ if [ "$(pwd)" = "$HOME" ]; then
 fi
 
 # Build image if it doesn't exist
-if ! docker image inspect "$IMAGE" &>/dev/null; then
-  echo "Building $IMAGE image..."
-  docker build -t "$IMAGE" "$SCRIPT_DIR"
+if ! docker image inspect claude-sandbox &>/dev/null; then
+  echo "Building claude-sandbox image..."
+  docker build -t claude-sandbox "$SCRIPT_DIR"
 fi
 
-mount_if_exists() {
-  local src="$1" target="$2" flags="${3:-ro}"
-  if [ -e "$src" ]; then
-    echo "-v ${src}:${target}:${flags}"
-  fi
-}
-
-docker run -it --rm \
-  -w /workspace \
-  -v "$(pwd)":/workspace \
-  \
-  `# Auth & Identity` \
-  $(mount_if_exists "$HOME/.npmrc"    /root/.npmrc) \
-  $(mount_if_exists "$HOME/.gitconfig" /root/.gitconfig) \
-  $(mount_if_exists "$HOME/.ssh"      /root/.ssh) \
-  \
-  `# Kubernetes` \
-  $(mount_if_exists "$HOME/.kube"              /root/.kube) \
-  $(mount_if_exists "$HOME/.pmctl"             /root/.pmctl) \
-  $(mount_if_exists "$HOME/.config/argocd"     /root/.config/argocd) \
-  \
-  `# Databases` \
-  $(mount_if_exists "$HOME/.docdb" /root/.docdb) \
-  $(mount_if_exists "$HOME/.aws"   /root/.aws) \
-  \
-  `# Editor` \
-  $(mount_if_exists "$HOME/.vimrc" /root/.vimrc) \
-  $(mount_if_exists "$HOME/.vim"   /root/.vim) \
-  \
-  `# Files` \
-  $(mount_if_exists "$HOME/Downloads" /root/Downloads) \
-  \
-  -e ANTHROPIC_API_KEY \
-  "$IMAGE" claude "$@"
+docker compose -f "$SCRIPT_DIR/docker-compose.yml" run --rm -e "ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY" claude "$@"

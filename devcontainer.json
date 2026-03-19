@@ -2,28 +2,31 @@
   "name": "Claude Sandbox",
   "build": { "dockerfile": "Dockerfile" },
   "mounts": [
-    // --- Auth & Identity ---
+    "// --- Auth & Identity ---",
     "source=${localEnv:HOME}/.npmrc,target=/root/.npmrc,type=bind,readonly",
     "source=${localEnv:HOME}/.gitconfig,target=/root/.gitconfig,type=bind,readonly",
     "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,readonly",
 
-    // --- Kubernetes ---
+    "// --- Kubernetes ---",
     "source=${localEnv:HOME}/.kube,target=/root/.kube,type=bind,readonly",
     "source=${localEnv:HOME}/.pmctl,target=/root/.pmctl,type=bind,readonly",
     "source=${localEnv:HOME}/.config/argocd,target=/root/.config/argocd,type=bind,readonly",
 
-    // --- Databases ---
+    "// --- Databases ---",
     "source=${localEnv:HOME}/.docdb,target=/root/.docdb,type=bind,readonly",
     "source=${localEnv:HOME}/.aws,target=/root/.aws,type=bind,readonly",
 
-    // --- Editor ---
+    "// --- Editor ---",
     "source=${localEnv:HOME}/.vimrc,target=/root/.vimrc,type=bind,readonly",
     "source=${localEnv:HOME}/.vim,target=/root/.vim,type=bind,readonly",
 
-    // --- Files ---
+    "// --- Files ---",
     "source=${localEnv:HOME}/Downloads,target=/root/Downloads,type=bind,readonly"
   ],
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
   "workspaceFolder": "/workspace",
-  "postStartCommand": "claude"
+  "postStartCommand": "claude",
+  "containerEnv": {
+     "ANTHROPIC_API_KEY": "${localEnv:CLAUDE_API_KEY}"
+   }
 }

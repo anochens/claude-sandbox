@@ -1,5 +1,6 @@
 {
   "theme": "dark",
+  "apiKeyHelper": "/usr/local/bin/claude-api-key",
   "permissions": {
     "allow": [
       "// --- File reads ---",
