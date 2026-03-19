@@ -7,19 +7,14 @@
 IMAGE="claude-sandbox"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Load saved API key if present
-ENV_FILE="$SCRIPT_DIR/.env"
-if [ -f "$ENV_FILE" ]; then
-  source "$ENV_FILE"
+# Pull API key from macOS keychain
+if [ -z "$ANTHROPIC_API_KEY" ]; then
+  ANTHROPIC_API_KEY=$(security find-generic-password -s "Claude Code" -w 2>/dev/null)
 fi
 
-# Prompt for API key once if not set, then save it
 if [ -z "$ANTHROPIC_API_KEY" ]; then
-  read -rsp "Enter your Anthropic API key: " ANTHROPIC_API_KEY
-  echo
-  echo "export ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY" > "$ENV_FILE"
-  chmod 600 "$ENV_FILE"
-  echo "Key saved to $ENV_FILE"
+  echo "Error: could not find Anthropic API key in keychain. Run 'claude' once to authenticate." >&2
+  exit 1
 fi
 
 # Refuse to run from home directory
