@@ -82,7 +82,10 @@
       "Bash(gh search *)",
       "Bash(gh status*)",
       "Bash(gh workflow list*)",
-      "Bash(gh workflow view*)"
+      "Bash(gh workflow view*)",
+      "Bash(gh pr edit*)",
+      "Bash(gh run rerun*)",
+      "Bash(gh workflow run*)"
     ],
     "deny": [
       "// --- GitHub CLI (write) ---",
@@ -91,15 +94,12 @@
       "Bash(gh issue edit*)",
       "Bash(gh pr close*)",
       "Bash(gh pr create*)",
-      "Bash(gh pr edit*)",
       "Bash(gh pr merge*)",
       "Bash(gh pr review*)",
       "Bash(gh release create*)",
       "Bash(gh release delete*)",
       "Bash(gh repo create*)",
       "Bash(gh repo delete*)",
-      "Bash(gh run rerun*)",
-      "Bash(gh workflow run*)",
       "Bash(gh workflow enable*)",
       "Bash(gh workflow disable*)",
 
