@@ -83,7 +83,7 @@ COPY claude-settings.json /root/.claude/settings.json
 # Write settings.local.json with onboarding flags stamped with current version
 RUN CLAUDE_VERSION=$(node -e "console.log(require('/usr/local/lib/node_modules/@anthropic-ai/claude-code/package.json').version)") \
     && jq -n --arg v "$CLAUDE_VERSION" \
-      '{hasCompletedOnboarding: true, lastOnboardingVersion: $v, loginMethod: "apiKey"}' \
+      '{hasCompletedOnboarding: true, lastOnboardingVersion: $v, loginMethod: "console"}' \
     > /root/.claude/settings.local.json
 
 # Create symlink so absolute SSH paths in .gitconfig resolve correctly
