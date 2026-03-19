@@ -7,6 +7,21 @@
 IMAGE="claude-sandbox"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# Load saved API key if present
+ENV_FILE="$SCRIPT_DIR/.env"
+if [ -f "$ENV_FILE" ]; then
+  source "$ENV_FILE"
+fi
+
+# Prompt for API key once if not set, then save it
+if [ -z "$ANTHROPIC_API_KEY" ]; then
+  read -rsp "Enter your Anthropic API key: " ANTHROPIC_API_KEY
+  echo
+  echo "export ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY" > "$ENV_FILE"
+  chmod 600 "$ENV_FILE"
+  echo "Key saved to $ENV_FILE"
+fi
+
 # Refuse to run from home directory
 if [ "$(pwd)" = "$HOME" ]; then
   echo "Error: cannot run claude-sandbox from your home directory. cd into a project first." >&2
@@ -51,4 +66,5 @@ docker run -it --rm \
   `# Files` \
   $(mount_if_exists "$HOME/Downloads" /root/Downloads) \
   \
+  -e ANTHROPIC_API_KEY \
   "$IMAGE" claude "$@"
