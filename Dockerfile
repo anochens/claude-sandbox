@@ -87,11 +87,11 @@ RUN npm install -g @anthropic-ai/claude-code
 RUN mkdir -p /root/.claude
 COPY claude-settings.json /root/.claude/settings.json
 
-# Write settings.local.json with onboarding flags stamped with current version
+# Write onboarding/theme flags — gD() checks for .config.json first, then settings.json
 RUN CLAUDE_VERSION=$(node -e "console.log(require('/usr/local/lib/node_modules/@anthropic-ai/claude-code/package.json').version)") \
     && jq -n --arg v "$CLAUDE_VERSION" \
-      '{hasCompletedOnboarding: true, lastOnboardingVersion: $v}' \
-    > /root/.claude/settings.local.json
+      '{hasCompletedOnboarding: true, lastOnboardingVersion: $v, theme: "dark"}' \
+    | tee /root/.claude/.config.json > /root/.claude/settings.local.json
 
 # Create symlink so absolute SSH paths in .gitconfig resolve correctly
 RUN mkdir -p /Users/aron.nochensonpostman.com && ln -s /root/.ssh /Users/aron.nochensonpostman.com/.ssh

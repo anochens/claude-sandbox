@@ -1,7 +1,9 @@
 {
   "theme": "dark",
+  "hasCompletedOnboarding": true,
   "apiKeyHelper": "/usr/local/bin/claude-api-key",
   "permissions": {
+    "defaultMode": "default",
     "allow": [
       "// --- File reads ---",
       "Glob",
