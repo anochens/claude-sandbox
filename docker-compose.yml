@@ -6,6 +6,9 @@ services:
     tty: true
     volumes:
       - ${PWD}:/workspace
+      # Claude sessions (for --resume)
+      - ${HOME}/.claude/sessions:/root/.claude/sessions
+      - ${HOME}/.claude/projects/-workspace:/root/.claude/projects/-workspace
       # Auth & Identity
       - ${HOME}/.bashrc:/root/.bashrc:ro
       - ${HOME}/.npmrc:/root/.npmrc:ro
