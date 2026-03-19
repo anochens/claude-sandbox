@@ -1,7 +1,5 @@
 {
   "theme": "dark",
-  "hasCompletedOnboarding": true,
-  "loginMethod": "apiKey",
   "permissions": {
     "allow": [
       "// --- File reads ---",
