@@ -11,7 +11,6 @@ services:
       # Sessions are shared with host so conversations persist across contexts
       - ${HOME}/.claude/sessions:/root/.claude/sessions
       # Auth & Identity
-      - ${HOME}/.bashrc:/root/.bashrc:ro
       - ${HOME}/.npmrc:/root/.npmrc:ro
       - ${HOME}/.gitconfig:/root/.gitconfig:ro
       - ${HOME}/.ssh:/root/.ssh:ro
