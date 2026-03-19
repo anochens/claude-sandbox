@@ -76,9 +76,12 @@ RUN curl -fsSL ${FNM_INSTALL_URL} | bash -s -- --install-dir /usr/local/bin --sk
 # Install Claude Code globally
 RUN npm install -g @anthropic-ai/claude-code
 
-# Bake in Claude Code permission settings
+# Bake in Claude Code permission settings, stamping current version into lastOnboardingVersion
 RUN mkdir -p /root/.claude
 COPY claude-settings.json /root/.claude/settings.json
+RUN CLAUDE_VERSION=$(node -e "require('@anthropic-ai/claude-code/package.json').version" 2>/dev/null || claude --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1) \
+    && jq --arg v "$CLAUDE_VERSION" '. + {lastOnboardingVersion: $v}' /root/.claude/settings.json > /tmp/settings.json \
+    && mv /tmp/settings.json /root/.claude/settings.json
 
 # Create symlink so absolute SSH paths in .gitconfig resolve correctly
 RUN mkdir -p /Users/aron.nochensonpostman.com && ln -s /root/.ssh /Users/aron.nochensonpostman.com/.ssh
