@@ -21,6 +21,7 @@ fi
 GH_TOKEN=$(gh auth token 2>/dev/null)
 
 mkdir -p "$HOME/.claude/sessions" "$HOME/.claude/projects"
+touch "$HOME/.claude/history.jsonl"
 
 # Refuse to run from home directory
 if [ "$(pwd)" = "$HOME" ]; then

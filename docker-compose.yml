@@ -11,6 +11,7 @@ services:
       # Sessions/history shared with host so conversations can be resumed
       - ${HOME}/.claude/sessions:/root/.claude/sessions
       - ${HOME}/.claude/projects:/root/.claude/projects
+      - ${HOME}/.claude/history.jsonl:/root/.claude/history.jsonl
       # Auth & Identity
       - ${HOME}/.npmrc:/root/.npmrc:ro
       - ${HOME}/.gitconfig:/root/.gitconfig:ro
