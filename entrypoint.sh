@@ -19,7 +19,15 @@ jq -n \
   '{hasCompletedOnboarding: true, lastOnboardingVersion: $v, theme: "dark", projects: {($p): {hasTrustDialogAccepted: true}}}' \
   > /home/claude/.claude/.config.json
 
-# Write sandbox settings into the container-local claude config volume
-cp /home/claude/.claude-defaults/settings.json /home/claude/.claude/settings.json
+# Merge sandbox defaults into settings.json, preserving any user-added settings
+# (e.g. plugin registrations). Defaults are the base; existing settings win on conflict.
+SETTINGS=/home/claude/.claude/settings.json
+DEFAULTS=/home/claude/.claude-defaults/settings.json
+if [ -f "$SETTINGS" ]; then
+  jq -s '.[0] * .[1]' "$DEFAULTS" "$SETTINGS" > /tmp/settings-merged.json \
+    && mv /tmp/settings-merged.json "$SETTINGS"
+else
+  cp "$DEFAULTS" "$SETTINGS"
+fi
 
 exec gosu claude env -u ANTHROPIC_API_KEY claude "$@"
