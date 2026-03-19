@@ -20,7 +20,7 @@ fi
 # Get GitHub token via gh CLI (handles macOS keychain transparently)
 GH_TOKEN=$(gh auth token 2>/dev/null)
 
-mkdir -p "$HOME/.claude/sessions"
+mkdir -p "$HOME/.claude/sessions" "$HOME/.claude/projects"
 
 # Refuse to run from home directory
 if [ "$(pwd)" = "$HOME" ]; then

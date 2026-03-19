@@ -8,8 +8,9 @@ services:
       - ${PWD}:/workspace
       # Claude config lives in a named volume — never touches host ~/.claude
       - claude-config:/root/.claude
-      # Sessions are shared with host so conversations persist across contexts
+      # Sessions/history shared with host so conversations can be resumed
       - ${HOME}/.claude/sessions:/root/.claude/sessions
+      - ${HOME}/.claude/projects:/root/.claude/projects
       # Auth & Identity
       - ${HOME}/.npmrc:/root/.npmrc:ro
       - ${HOME}/.gitconfig:/root/.gitconfig:ro
